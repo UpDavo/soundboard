@@ -9,7 +9,8 @@ export function VolumeCard({ className }: { className?: string }) {
   const { volume, player } = useAudioPlayer();
 
   return (
-    <ControlCard title="Sound" meta={`${Math.round(volume * 100)}%`} className={className}>
+    // Sólida: flota sobre los botones.
+    <ControlCard title="Sound" meta={`${Math.round(volume * 100)}%`} surface="solid" className={className}>
       <VolumeSlider value={volume} onChange={(v) => player.setVolume(v)} />
     </ControlCard>
   );

@@ -4,9 +4,15 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
 
+const SIZES = {
+  sm: { box: "h-4 gap-0.5", bar: "w-1" },
+  md: { box: "h-6 gap-1", bar: "w-1.5" },
+} as const;
+
 interface EqualizerBarsProps {
   active: boolean;
   bars?: number;
+  size?: keyof typeof SIZES;
   className?: string;
   barClassName?: string;
 }
@@ -14,7 +20,7 @@ interface EqualizerBarsProps {
 const IDLE_SCALE = 0.25;
 
 /** Barras de ecualizador animadas con GSAP mientras `active` es true. */
-export function EqualizerBars({ active, bars = 4, className, barClassName }: EqualizerBarsProps) {
+export function EqualizerBars({ active, bars = 4, size = "md", className, barClassName }: EqualizerBarsProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const loop = useRef<gsap.core.Tween | null>(null);
 
@@ -39,13 +45,13 @@ export function EqualizerBars({ active, bars = 4, className, barClassName }: Equ
   );
 
   return (
-    <span ref={ref} aria-hidden className={cn("flex h-6 items-end gap-1", className)}>
+    <span ref={ref} aria-hidden className={cn("flex items-end", SIZES[size].box, className)}>
       {Array.from({ length: bars }).map((_, i) => (
         <span
           key={i}
           // transform inline: las clases scale-* de Tailwind v4 usan `scale` y chocan con GSAP.
           style={{ transform: `scaleY(${IDLE_SCALE})` }}
-          className={cn("eq-bar h-full w-1.5 origin-bottom rounded-full transition-colors", barClassName)}
+          className={cn("eq-bar h-full origin-bottom rounded-full transition-colors", SIZES[size].bar, barClassName)}
         />
       ))}
     </span>

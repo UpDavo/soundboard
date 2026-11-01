@@ -3,7 +3,7 @@ import { connection } from "next/server";
 import { soundboardService } from "@/services/soundboard.service";
 import { StoreProvider } from "@/store/StoreProvider";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { NowPlayingBubble, SoundBoard, SoundBoardSkeleton, VolumeDock } from "@/components/sound";
+import { PlayerDock, SoundBoard, SoundBoardSkeleton } from "@/components/sound";
 
 /**
  * Lee audios + data/soundboard.json en cada request:
@@ -22,10 +22,9 @@ async function Board() {
 export default function Home() {
   return (
     <>
-      <NowPlayingBubble />
-      <VolumeDock />
+      <PlayerDock />
       {/* pb deja espacio a los flotantes de abajo (en mobile van apilados). */}
-      <main className="flex w-full flex-col gap-6 px-4 pt-4 pb-48 sm:px-6 sm:pt-6 md:pb-28">
+      <main className="flex w-full flex-col gap-6 px-4 pt-4 pb-48 sm:px-6 sm:pt-6 md:pb-32">
         <PageHeader title="Soundboard" />
         <Suspense fallback={<SoundBoardSkeleton />}>
           <Board />

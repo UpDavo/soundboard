@@ -13,7 +13,7 @@ export function LocalSourceBanner({ folderName, count, onRestore }: LocalSourceB
   return (
     <FloatingNotice
       animationKey={folderName}
-      // Mobile: encima del volumen (que ocupa el ancho abajo). Desktop: abajo a la izquierda.
+      // Mobile: encima del volumen (el reproductor lo tapa mientras suena). Desktop: abajo a la izquierda.
       className="bottom-[100px] left-4 md:bottom-6 md:left-6"
       icon={<FolderIcon className="size-[18px]" />}
       title={folderName}

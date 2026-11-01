@@ -5,10 +5,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Fondo negro sólido (también en el overscroll / rebote del scroll). */
+html,
 body {
-  background:
-    radial-gradient(1200px 600px at 80% -10%, rgb(64 64 72 / 0.45), transparent 60%),
-    #0b0b0c;
+  background: #000;
+}
+
+body {
   color: #fff;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }

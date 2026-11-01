@@ -23,7 +23,7 @@ export function FloatingNotice({ icon, title, description, action, animationKey,
       animationKey={animationKey}
       className={cn(className ?? "bottom-4 left-4 sm:bottom-6 sm:left-6", "max-w-[calc(100vw-2rem)]")}
     >
-      <Panel radius="md" className="flex items-center gap-3 bg-neutral-700/80 py-2.5 pr-2.5 pl-3">
+      <Panel radius="md" surface="solid" className="flex items-center gap-3 py-2.5 pr-2.5 pl-3">
         {icon && (
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-neutral-900 text-white/80">
             {icon}

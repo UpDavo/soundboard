@@ -15,7 +15,12 @@ export function usePlaybackTicker(running: boolean, resetKey?: string) {
 
   useGSAP(
     () => {
-      if (!running) return;
+      if (!running) {
+        // Sin reproducción: barra vacía y sin tiempo.
+        gsap.to(fillRef.current, { scaleX: 0, duration: 0.3, ease: "power2.out" });
+        if (timeRef.current) timeRef.current.textContent = "";
+        return;
+      }
       const tick = () => {
         gsap.set(fillRef.current, { scaleX: audioPlayer.getProgress() });
         const { current, duration } = audioPlayer.getTimes();
