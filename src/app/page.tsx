@@ -6,8 +6,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { NowPlayingBubble, SoundBoard, SoundBoardSkeleton, VolumeDock } from "@/components/sound";
 
 /**
- * Lee mp3 + data/soundboard.json en cada request:
- * agregar un .mp3 o editar el json solo requiere recargar.
+ * Lee audios + data/soundboard.json en cada request:
+ * agregar un .mp3/.m4a o editar el json solo requiere recargar.
  */
 async function Board() {
   await connection();

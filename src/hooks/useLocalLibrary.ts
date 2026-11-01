@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AUDIO_EXTENSIONS_LABEL } from "@/lib/audio-file";
 import { audioPlayer } from "@/services/audio-player.service";
 import { localSoundService } from "@/services/local-sound.service";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -40,7 +41,7 @@ export function useLocalLibrary() {
         audioPlayer.stop();
         const library = await localSoundService.importFolder(files);
         if (library) dispatch(loadLocalSounds(library));
-        else setError("Esa carpeta no tiene archivos .mp3.");
+        else setError(`Esa carpeta no tiene archivos ${AUDIO_EXTENSIONS_LABEL}.`);
       } finally {
         setBusy(false);
       }

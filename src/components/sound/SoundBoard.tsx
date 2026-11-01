@@ -10,6 +10,7 @@ import {
   selectSounds,
   selectVisibleSounds,
 } from "@/store/selectors";
+import { AUDIO_EXTENSIONS_LABEL } from "@/lib/audio-file";
 import { EmptyState } from "@/components/ui";
 import { SoundToolbar } from "./SoundToolbar";
 import { SoundGrid } from "./SoundGrid";
@@ -39,7 +40,7 @@ export function SoundBoard() {
     return (
       <section className="flex flex-col items-start gap-4">
         <EmptyState>
-          No hay sonidos. Agrega archivos <code className="text-white">.mp3</code> en{" "}
+          No hay sonidos. Agrega archivos <code className="text-white">{AUDIO_EXTENSIONS_LABEL}</code> en{" "}
           <code className="text-white">public/assets/mp3</code> y recarga, o usa una carpeta de tu PC.
         </EmptyState>
         {folderButton}

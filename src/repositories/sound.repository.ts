@@ -1,9 +1,10 @@
 import "server-only";
 import fs from "node:fs";
 import path from "node:path";
+import { isAudioFile } from "@/lib/audio-file";
 import type { SoundFile } from "@/types/sound";
 
-/** Carpeta (relativa a /public) donde viven los mp3. */
+/** Carpeta (relativa a /public) donde viven los audios (.mp3, .m4a). */
 export const SOUNDS_PUBLIC_DIR = "/assets/mp3";
 
 const SOUNDS_FS_DIR = path.join(process.cwd(), "public", SOUNDS_PUBLIC_DIR);
@@ -18,7 +19,7 @@ export const soundRepository = {
 
     return fs
       .readdirSync(SOUNDS_FS_DIR, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && /\.mp3$/i.test(entry.name))
+      .filter((entry) => entry.isFile() && isAudioFile(entry.name))
       .map((entry) => ({
         fileName: entry.name,
         publicPath: `${SOUNDS_PUBLIC_DIR}/${encodeURIComponent(entry.name)}`,

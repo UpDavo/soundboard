@@ -4,6 +4,7 @@ import {
   type LocalSoundRecord,
 } from "@/repositories/local-sound.repository";
 import { soundOrderService } from "./sound-order.service";
+import { isAudioFile, stripAudioExtension, toSoundLabel } from "@/lib/audio-file";
 import type { SoundPreferences } from "@/types/preferences";
 import type { Sound } from "@/types/sound";
 
@@ -11,13 +12,6 @@ export interface LocalLibrary {
   folderName: string;
   sounds: Sound[];
   favoriteIds: string[];
-}
-
-const MP3 = /\.mp3$/i;
-
-function toLabel(fileName: string) {
-  const base = fileName.replace(MP3, "").replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
-  return base.charAt(0).toUpperCase() + base.slice(1);
 }
 
 /** URLs blob vivas; se liberan al cambiar de carpeta o volver a los originales. */
@@ -42,19 +36,19 @@ function toLibrary(folder: LocalFolderRecord, prefs?: SoundPreferences): LocalLi
  * reproducibles y la mantiene cacheada en IndexedDB.
  */
 export const localSoundService = {
-  /** Lee los .mp3 de la carpeta elegida (incluye subcarpetas). null si no hay ninguno. */
+  /** Lee los audios (.mp3, .m4a) de la carpeta elegida, incluye subcarpetas. null si no hay ninguno. */
   async importFolder(files: FileList | File[]): Promise<LocalLibrary | null> {
-    const list = Array.from(files).filter((f) => MP3.test(f.name));
+    const list = Array.from(files).filter((f) => isAudioFile(f.name));
     if (list.length === 0) return null;
 
     const folderName = list[0].webkitRelativePath.split("/")[0] || "Carpeta local";
     const seen = new Set<string>();
     const records: LocalSoundRecord[] = [];
     for (const file of list) {
-      const id = (file.webkitRelativePath || file.name).replace(MP3, "").normalize("NFC");
+      const id = stripAudioExtension(file.webkitRelativePath || file.name);
       if (seen.has(id)) continue;
       seen.add(id);
-      records.push({ id, label: toLabel(file.name.normalize("NFC")), blob: file });
+      records.push({ id, label: toSoundLabel(file.name), blob: file });
     }
 
     const folder = { folderName, sounds: records };
