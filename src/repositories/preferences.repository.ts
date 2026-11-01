@@ -2,8 +2,12 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 
-/** Archivo local que hace de "base de datos" de preferencias. */
-export const PREFERENCES_FILE = path.join(process.cwd(), "data", "soundboard.json");
+/**
+ * Archivo local que hace de "base de datos" de preferencias.
+ * DATA_DIR permite apuntarlo a un volumen persistente (ej. Railway Volume).
+ */
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), "data");
+export const PREFERENCES_FILE = path.join(DATA_DIR, "soundboard.json");
 
 /**
  * Repositorio: solo lee/escribe el texto crudo del archivo.
