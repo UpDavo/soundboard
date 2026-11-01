@@ -6,3 +6,5 @@ export { SoundToolbar } from "./SoundToolbar";
 export { VolumeCard } from "./VolumeCard";
 export { VolumeSlider } from "./VolumeSlider";
 export { NowPlayingBubble } from "./NowPlayingBubble";
+export { LocalFolderButton } from "./LocalFolderButton";
+export { LocalSourceBanner } from "./LocalSourceBanner";

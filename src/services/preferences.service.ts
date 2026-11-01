@@ -1,5 +1,6 @@
 import "server-only";
 import { preferencesRepository } from "@/repositories/preferences.repository";
+import { soundOrderService } from "./sound-order.service";
 import type { SoundPreferences } from "@/types/preferences";
 import type { Sound } from "@/types/sound";
 
@@ -74,19 +75,8 @@ export const preferencesService = {
     await preferencesRepository.write(serialize(prefs));
   },
 
-  /**
-   * Aplica el orden guardado: primero los ids conocidos en ese orden,
-   * luego los sonidos nuevos (aún no ordenados) en orden alfabético.
-   * Ids de archivos que ya no existen se descartan.
-   */
+  /** Aplica orden + favoritos guardados a los sonidos del disco. */
   apply(sounds: Sound[], prefs: SoundPreferences) {
-    const byId = new Map(sounds.map((s) => [s.id, s]));
-    const ordered = prefs.order.flatMap((id) => byId.get(id) ?? []);
-    const placed = new Set(ordered.map((s) => s.id));
-    const rest = sounds.filter((s) => !placed.has(s.id));
-    return {
-      sounds: [...ordered, ...rest],
-      favoriteIds: prefs.favorites.filter((id) => byId.has(id)),
-    };
+    return soundOrderService.apply(sounds, prefs);
   },
 };

@@ -1,5 +1,6 @@
 import "server-only";
 import { soundRepository } from "@/repositories/sound.repository";
+import { soundOrderService } from "./sound-order.service";
 import type { Sound, SoundFile } from "@/types/sound";
 
 /** "sirena_suave-2.mp3" -> "Sirena suave 2" */
@@ -27,9 +28,6 @@ function toSound(file: SoundFile): Sound {
  */
 export const soundService = {
   getAll(): Sound[] {
-    return soundRepository
-      .findAll()
-      .map(toSound)
-      .sort((a, b) => a.label.localeCompare(b.label, "es"));
+    return soundOrderService.sortByLabel(soundRepository.findAll().map(toSound));
   },
 };

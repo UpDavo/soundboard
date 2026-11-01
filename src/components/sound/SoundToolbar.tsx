@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { SearchInput, StarIcon, ToggleChip } from "@/components/ui";
 
 interface SoundToolbarProps {
@@ -10,6 +11,8 @@ interface SoundToolbarProps {
   favoriteCount: number;
   resultCount: number;
   total: number;
+  /** Acciones extra al final (ej. elegir carpeta local). */
+  actions?: ReactNode;
 }
 
 /** Buscador + filtro de favoritos + contador. */
@@ -21,6 +24,7 @@ export function SoundToolbar({
   favoriteCount,
   resultCount,
   total,
+  actions,
 }: SoundToolbarProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -41,6 +45,7 @@ export function SoundToolbar({
       <span className="text-sm tabular-nums text-white/50">
         {resultCount} de {total}
       </span>
+      {actions && <div className="flex items-center gap-3 sm:ml-auto">{actions}</div>}
     </div>
   );
 }

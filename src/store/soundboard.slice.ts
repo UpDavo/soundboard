@@ -1,17 +1,25 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Sound } from "@/types/sound";
 
+/** De dónde vienen los sonidos visibles. */
+export type SoundSource = { kind: "server" } | { kind: "local"; folderName: string };
+
 export interface SoundboardState {
   /** Sonidos en el orden en que se muestran. */
   sounds: Sound[];
   favoriteIds: string[];
   showFavoritesOnly: boolean;
+  source: SoundSource;
+  /** Sonidos del servidor guardados mientras se usa una carpeta local. */
+  serverSnapshot: { sounds: Sound[]; favoriteIds: string[] } | null;
 }
 
 export const initialSoundboardState: SoundboardState = {
   sounds: [],
   favoriteIds: [],
   showFavoritesOnly: false,
+  source: { kind: "server" },
+  serverSnapshot: null,
 };
 
 const soundboardSlice = createSlice({
@@ -36,8 +44,38 @@ const soundboardSlice = createSlice({
     setShowFavoritesOnly(state, { payload }: PayloadAction<boolean>) {
       state.showFavoritesOnly = payload;
     },
+
+    /** Reemplaza los sonidos por los de una carpeta local (guarda los del servidor). */
+    loadLocalSounds(
+      state,
+      { payload }: PayloadAction<{ folderName: string; sounds: Sound[]; favoriteIds: string[] }>,
+    ) {
+      if (state.source.kind === "server") {
+        state.serverSnapshot = { sounds: state.sounds, favoriteIds: state.favoriteIds };
+      }
+      state.sounds = payload.sounds;
+      state.favoriteIds = payload.favoriteIds;
+      state.source = { kind: "local", folderName: payload.folderName };
+      state.showFavoritesOnly = false;
+    },
+
+    /** Vuelve a los sonidos del servidor. */
+    restoreServerSounds(state) {
+      if (!state.serverSnapshot) return;
+      state.sounds = state.serverSnapshot.sounds;
+      state.favoriteIds = state.serverSnapshot.favoriteIds;
+      state.serverSnapshot = null;
+      state.source = { kind: "server" };
+      state.showFavoritesOnly = false;
+    },
   },
 });
 
-export const { toggleFavorite, moveSound, setShowFavoritesOnly } = soundboardSlice.actions;
+export const {
+  toggleFavorite,
+  moveSound,
+  setShowFavoritesOnly,
+  loadLocalSounds,
+  restoreServerSounds,
+} = soundboardSlice.actions;
 export const soundboardReducer = soundboardSlice.reducer;

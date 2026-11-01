@@ -4,6 +4,7 @@ import type { RootState } from "./store";
 export const selectSounds = (s: RootState) => s.soundboard.sounds;
 export const selectFavoriteIds = (s: RootState) => s.soundboard.favoriteIds;
 export const selectShowFavoritesOnly = (s: RootState) => s.soundboard.showFavoritesOnly;
+export const selectSource = (s: RootState) => s.soundboard.source;
 
 export const selectFavoriteSet = createSelector(selectFavoriteIds, (ids) => new Set(ids));
 

@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <>
       <NowPlayingBubble />
-      <main className="flex w-full flex-col gap-6 px-4 pt-4 pb-16 sm:px-6 sm:pt-6">
+      <main className="flex w-full flex-col gap-6 px-4 pt-4 pb-28 sm:px-6 sm:pt-6">
         <PageHeader
           title="Soundboard"
           actions={<VolumeCard className="w-full sm:w-[280px]" />}
