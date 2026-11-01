@@ -4,6 +4,7 @@ export { SoundGrid } from "./SoundGrid";
 export { SoundButton } from "./SoundButton";
 export { SoundToolbar } from "./SoundToolbar";
 export { VolumeCard } from "./VolumeCard";
+export { VolumeDock } from "./VolumeDock";
 export { VolumeSlider } from "./VolumeSlider";
 export { NowPlayingBubble } from "./NowPlayingBubble";
 export { LocalFolderButton } from "./LocalFolderButton";

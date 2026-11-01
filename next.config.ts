@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // El indicador de dev va a la derecha: abajo-izquierda es del aviso de carpeta local.
-  devIndicators: { position: "bottom-right" },
+  // Sin indicador de dev: las esquinas inferiores son del aviso de carpeta y del volumen.
+  // (El overlay de errores sigue funcionando.)
+  devIndicators: false,
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

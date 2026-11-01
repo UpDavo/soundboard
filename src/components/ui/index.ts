@@ -10,6 +10,7 @@ export { ResponsiveGrid } from "./ResponsiveGrid";
 export { EqualizerBars } from "./EqualizerBars";
 export { ControlCard } from "./ControlCard";
 export { NotificationBubble } from "./NotificationBubble";
+export { Floating } from "./Floating";
 export { FloatingNotice } from "./FloatingNotice";
 export { StarToggle } from "./StarToggle";
 export { ToggleChip } from "./ToggleChip";

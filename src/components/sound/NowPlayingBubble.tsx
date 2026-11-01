@@ -25,8 +25,7 @@ export function NowPlayingBubble() {
       subtitle="Reproduciendo"
       onClose={() => player.stop()}
       closeLabel="Detener sonido"
-      // Desktop: a la izquierda de la tarjeta de volumen (280px + gutter 24px + gap 16px).
-      className="sm:top-6 sm:right-6 lg:right-[320px]"
+      className="sm:top-6 sm:right-6"
     >
       <PlaybackBar fillRef={fillRef} />
     </NotificationBubble>
