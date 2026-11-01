@@ -15,8 +15,11 @@ export function stripAudioExtension(fileName: string) {
   return fileName.replace(AUDIO_FILE, "").normalize("NFC");
 }
 
-/** "sirena_suave-2.m4a" -> "Sirena suave 2" */
+/** "sirena_suave-2.m4a" -> "SIRENA SUAVE 2" (todo en mayúsculas para que se vean uniformes). */
 export function toSoundLabel(fileName: string) {
-  const base = stripAudioExtension(fileName).replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
-  return base.charAt(0).toUpperCase() + base.slice(1);
+  return stripAudioExtension(fileName)
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLocaleUpperCase("es");
 }
