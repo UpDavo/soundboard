@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# soundboard: respaldos y temporales de data/soundboard.json
+/data/*.corrupt-*.json
+/data/*.tmp
