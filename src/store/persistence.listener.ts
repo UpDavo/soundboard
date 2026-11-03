@@ -1,21 +1,21 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { savePreferencesAction } from "@/app/actions/preferences.action";
 import { localSoundService } from "@/services/local-sound.service";
-import { moveSound, toggleFavorite } from "./soundboard.slice";
+import { deleteCombo, moveSound, saveCombo, toggleFavorite } from "./soundboard.slice";
 import { selectPreferences } from "./selectors";
 import type { RootState } from "./store";
 
 const SAVE_DEBOUNCE_MS = 400;
 
 /**
- * Tras cambiar favoritos u orden, guarda (con debounce):
+ * Tras cambiar favoritos, orden o combos, guarda (con debounce):
  * - sonidos del servidor -> data/soundboard.json (Server Action)
  * - carpeta local        -> IndexedDB del navegador
  */
 export const persistenceListener = createListenerMiddleware();
 
 persistenceListener.startListening({
-  matcher: isAnyOf(toggleFavorite, moveSound),
+  matcher: isAnyOf(toggleFavorite, moveSound, saveCombo, deleteCombo),
   effect: async (_action, api) => {
     api.cancelActiveListeners();
     await api.delay(SAVE_DEBOUNCE_MS);

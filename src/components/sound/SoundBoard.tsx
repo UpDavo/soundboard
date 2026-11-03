@@ -2,8 +2,9 @@
 
 import { useSoundSearch } from "@/hooks/useSoundSearch";
 import { useLocalLibrary } from "@/hooks/useLocalLibrary";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setShowFavoritesOnly } from "@/store/soundboard.slice";
+import { clearComboDraft, setShowFavoritesOnly } from "@/store/soundboard.slice";
 import {
   selectFavoriteIds,
   selectShowFavoritesOnly,
@@ -14,6 +15,7 @@ import { AUDIO_EXTENSIONS_LABEL } from "@/lib/audio-file";
 import { EmptyState } from "@/components/ui";
 import { SoundToolbar } from "./SoundToolbar";
 import { SoundGrid } from "./SoundGrid";
+import { ComboBar } from "./ComboBar";
 import { LocalFolderButton } from "./LocalFolderButton";
 import { LocalSourceBanner } from "./LocalSourceBanner";
 import { SoundBoardSkeleton } from "./SoundBoardSkeleton";
@@ -27,6 +29,12 @@ export function SoundBoard() {
   const visible = useAppSelector(selectVisibleSounds);
   const { query, setQuery, deferredQuery, results } = useSoundSearch(visible);
   const local = useLocalLibrary();
+  const { multi, player } = useAudioPlayer();
+
+  const setMulti = (value: boolean) => {
+    player.setMulti(value);
+    if (!value) dispatch(clearComboDraft());
+  };
 
   const folderButton = (
     <LocalFolderButton onPick={local.pickFolder} busy={local.busy} isLocal={local.isLocal} />
@@ -65,11 +73,14 @@ export function SoundBoard() {
         favoritesOnly={favoritesOnly}
         onFavoritesOnlyChange={(v) => dispatch(setShowFavoritesOnly(v))}
         favoriteCount={favoriteCount}
+        multi={multi}
+        onMultiChange={setMulti}
         resultCount={results.length}
         total={total}
         actions={folderButton}
       />
       {folderError}
+      <ComboBar />
 
       {results.length > 0 ? (
         <SoundGrid

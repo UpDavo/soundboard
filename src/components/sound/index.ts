@@ -9,3 +9,4 @@ export { NowPlayingCard } from "./NowPlayingCard";
 export { VolumeSlider } from "./VolumeSlider";
 export { LocalFolderButton } from "./LocalFolderButton";
 export { LocalSourceBanner } from "./LocalSourceBanner";
+export { ComboBar } from "./ComboBar";

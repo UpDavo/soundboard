@@ -1,12 +1,14 @@
 import "server-only";
 import { soundService } from "./sound.service";
 import { preferencesService } from "./preferences.service";
-import type { SoundPreferences } from "@/types/preferences";
+import { comboService } from "./combo.service";
+import type { Combo, SoundPreferences } from "@/types/preferences";
 import type { Sound } from "@/types/sound";
 
 export interface Soundboard {
   sounds: Sound[];
   favoriteIds: string[];
+  combos: Combo[];
 }
 
 /** Combina sonidos del disco + preferencias guardadas. */
@@ -26,6 +28,7 @@ export const soundboardService = {
     const prefs: SoundPreferences = {
       order: clean((input as SoundPreferences)?.order),
       favorites: clean((input as SoundPreferences)?.favorites),
+      combos: comboService.sanitize((input as SoundPreferences)?.combos, (id) => valid.has(id)),
     };
     await preferencesService.save(prefs);
   },

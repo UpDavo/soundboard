@@ -38,7 +38,7 @@ export function useLocalLibrary() {
       setBusy(true);
       setError(null);
       try {
-        audioPlayer.stop();
+        audioPlayer.stopAll();
         const library = await localSoundService.importFolder(files);
         if (library) dispatch(loadLocalSounds(library));
         else setError(`Esa carpeta no tiene archivos ${AUDIO_EXTENSIONS_LABEL}.`);
@@ -50,7 +50,7 @@ export function useLocalLibrary() {
   );
 
   const restoreOriginals = useCallback(async () => {
-    audioPlayer.stop();
+    audioPlayer.stopAll();
     await localSoundService.clear();
     dispatch(restoreServerSounds());
     setError(null);

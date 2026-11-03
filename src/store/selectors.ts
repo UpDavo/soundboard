@@ -5,6 +5,10 @@ export const selectSounds = (s: RootState) => s.soundboard.sounds;
 export const selectFavoriteIds = (s: RootState) => s.soundboard.favoriteIds;
 export const selectShowFavoritesOnly = (s: RootState) => s.soundboard.showFavoritesOnly;
 export const selectSource = (s: RootState) => s.soundboard.source;
+export const selectCombos = (s: RootState) => s.soundboard.combos;
+export const selectComboDraft = (s: RootState) => s.soundboard.comboDraft;
+
+export const selectSoundMap = createSelector(selectSounds, (sounds) => new Map(sounds.map((s) => [s.id, s])));
 
 export const selectFavoriteSet = createSelector(selectFavoriteIds, (ids) => new Set(ids));
 
@@ -16,6 +20,6 @@ export const selectVisibleSounds = createSelector(
 
 /** Lo que se guarda en el archivo. */
 export const selectPreferences = createSelector(
-  [selectSounds, selectFavoriteIds],
-  (sounds, favorites) => ({ order: sounds.map((s) => s.id), favorites }),
+  [selectSounds, selectFavoriteIds, selectCombos],
+  (sounds, favorites, combos) => ({ order: sounds.map((s) => s.id), favorites, combos }),
 );

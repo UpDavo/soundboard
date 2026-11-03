@@ -11,9 +11,9 @@ import { PlayerDock, SoundBoard, SoundBoardSkeleton } from "@/components/sound";
  */
 async function Board() {
   await connection();
-  const { sounds, favoriteIds } = soundboardService.get();
+  const { sounds, favoriteIds, combos } = soundboardService.get();
   return (
-    <StoreProvider initialState={{ sounds, favoriteIds }}>
+    <StoreProvider initialState={{ sounds, favoriteIds, combos }}>
       <SoundBoard />
     </StoreProvider>
   );

@@ -1,16 +1,18 @@
 import "server-only";
 import { preferencesRepository } from "@/repositories/preferences.repository";
 import { soundOrderService } from "./sound-order.service";
-import type { SoundPreferences } from "@/types/preferences";
+import { comboService } from "./combo.service";
+import type { Combo, SoundPreferences } from "@/types/preferences";
 import type { Sound } from "@/types/sound";
 
 /**
  * Formato de data/soundboard.json (versionado para poder migrar después):
  * {
  *   "version": 1,
- *   "sounds": [{ "id": "vibrato", "favorite": true }, { "id": "tono-la", "favorite": false }]
+ *   "sounds": [{ "id": "vibrato", "favorite": true }, { "id": "tono-la", "favorite": false }],
+ *   "combos": [{ "id": "m1x2-ab12cd", "name": "Fiesta", "soundIds": ["vibrato", "tono-la"] }]
  * }
- * El orden del array es el orden en pantalla.
+ * El orden de "sounds" es el orden en pantalla. "combos" es opcional (agregado sin cambiar la versión).
  */
 const FILE_VERSION = 1;
 
@@ -22,6 +24,7 @@ interface SoundEntry {
 interface PreferencesFile {
   version: number;
   sounds: SoundEntry[];
+  combos: Combo[];
 }
 
 const isObject = (v: unknown): v is Record<string, unknown> =>
@@ -44,15 +47,17 @@ function parse(text: string): SoundPreferences {
     order.push(id);
     if (entry.favorite === true) favorites.push(id);
   }
-  return { order, favorites };
+  const combos = comboService.sanitize(isObject(data) ? data.combos : undefined);
+  return { order, favorites, combos };
 }
 
 /** Preferencias -> JSON legible (indentado, con salto final). */
-function serialize({ order, favorites }: SoundPreferences): string {
+function serialize({ order, favorites, combos = [] }: SoundPreferences): string {
   const fav = new Set(favorites);
   const file: PreferencesFile = {
     version: FILE_VERSION,
     sounds: order.map((id) => ({ id, favorite: fav.has(id) })),
+    combos,
   };
   return `${JSON.stringify(file, null, 2)}\n`;
 }
@@ -60,14 +65,14 @@ function serialize({ order, favorites }: SoundPreferences): string {
 export const preferencesService = {
   get(): SoundPreferences {
     const text = preferencesRepository.read();
-    if (!text) return { order: [], favorites: [] };
+    if (!text) return { order: [], favorites: [], combos: [] };
     try {
       return parse(text);
     } catch {
       // JSON roto (ej. editado a mano): se respalda para no perderlo en el próximo guardado.
       const backup = preferencesRepository.backupCorrupt();
       console.warn(`[preferences] JSON inválido; respaldo en ${backup}`);
-      return { order: [], favorites: [] };
+      return { order: [], favorites: [], combos: [] };
     }
   },
 

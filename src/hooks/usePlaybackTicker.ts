@@ -6,31 +6,34 @@ import { formatTime } from "@/lib/format";
 import { audioPlayer } from "@/services/audio-player.service";
 
 /**
- * Mientras `running`, escribe por frame (gsap.ticker) el progreso y el tiempo
- * del sonido actual directo en el DOM, sin re-render de React.
+ * Mientras `running`, escribe por frame (gsap.ticker) el progreso, el tiempo
+ * y lo que falta para terminar del sonido `soundId`, directo en el DOM, sin re-render.
  */
-export function usePlaybackTicker(running: boolean, resetKey?: string) {
+export function usePlaybackTicker(soundId: string, running: boolean) {
   const fillRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef<HTMLSpanElement>(null);
+  const remainingRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
-      if (!running) {
-        // Sin reproducción: barra vacía y sin tiempo.
-        gsap.to(fillRef.current, { scaleX: 0, duration: 0.3, ease: "power2.out" });
-        if (timeRef.current) timeRef.current.textContent = "";
-        return;
-      }
+      if (!running) return;
       const tick = () => {
-        gsap.set(fillRef.current, { scaleX: audioPlayer.getProgress() });
-        const { current, duration } = audioPlayer.getTimes();
-        if (timeRef.current) timeRef.current.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        gsap.set(fillRef.current, { scaleX: audioPlayer.getProgress(soundId) });
+        const { current, duration } = audioPlayer.getTimes(soundId);
+        if (timeRef.current) {
+          timeRef.current.textContent = duration ? `${formatTime(current)} / ${formatTime(duration)}` : "";
+        }
+        if (remainingRef.current) {
+          remainingRef.current.textContent = duration
+            ? `Termina en ${formatTime(Math.ceil(duration - current))}`
+            : "Cargando…";
+        }
       };
       gsap.ticker.add(tick);
       return () => gsap.ticker.remove(tick);
     },
-    { dependencies: [running, resetKey] },
+    { dependencies: [soundId, running] },
   );
 
-  return { fillRef, timeRef };
+  return { fillRef, timeRef, remainingRef };
 }

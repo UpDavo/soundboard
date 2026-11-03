@@ -5,13 +5,14 @@ import {
 } from "@/repositories/local-sound.repository";
 import { soundOrderService } from "./sound-order.service";
 import { isAudioFile, stripAudioExtension, toSoundLabel } from "@/lib/audio-file";
-import type { SoundPreferences } from "@/types/preferences";
+import type { Combo, SoundPreferences } from "@/types/preferences";
 import type { Sound } from "@/types/sound";
 
 export interface LocalLibrary {
   folderName: string;
   sounds: Sound[];
   favoriteIds: string[];
+  combos: Combo[];
 }
 
 /** URLs blob vivas; se liberan al cambiar de carpeta o volver a los originales. */

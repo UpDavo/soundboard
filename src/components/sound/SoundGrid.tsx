@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { moveSound, toggleFavorite } from "@/store/soundboard.slice";
+import { addToComboDraft, moveSound, toggleFavorite } from "@/store/soundboard.slice";
 import { selectFavoriteSet } from "@/store/selectors";
 import { SortableGrid } from "@/components/dnd/SortableGrid";
 import { SoundButton } from "./SoundButton";
@@ -20,7 +20,8 @@ interface SoundGridProps {
 export function SoundGrid({ sounds, animationKey }: SoundGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isFirstRun = useRef(true);
-  const { current, isPlaying, player } = useAudioPlayer();
+  const { voices, multi, player } = useAudioPlayer();
+  const playingIds = useMemo(() => new Set(voices.map((v) => v.id)), [voices]);
   const favorites = useAppSelector(selectFavoriteSet);
   const dispatch = useAppDispatch();
 
@@ -47,9 +48,14 @@ export function SoundGrid({ sounds, animationKey }: SoundGridProps) {
   const renderButton = (sound: Sound) => (
     <SoundButton
       sound={sound}
-      active={isPlaying && current?.id === sound.id}
+      active={playingIds.has(sound.id)}
       favorite={favorites.has(sound.id)}
-      onPress={(s) => player.toggle(s)}
+      onPress={(s) => {
+        const starting = !player.isPlaying(s.id);
+        player.toggle(s);
+        // En modo múltiple, lo que se toca se va sumando al combo en armado.
+        if (starting && multi) dispatch(addToComboDraft(s.id));
+      }}
       onToggleFavorite={(s) => dispatch(toggleFavorite(s.id))}
     />
   );

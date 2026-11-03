@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { SearchInput, StarIcon, ToggleChip } from "@/components/ui";
+import { LayersIcon, SearchInput, StarIcon, ToggleChip } from "@/components/ui";
 
 interface SoundToolbarProps {
   query: string;
@@ -9,19 +9,24 @@ interface SoundToolbarProps {
   favoritesOnly: boolean;
   onFavoritesOnlyChange: (value: boolean) => void;
   favoriteCount: number;
+  /** Modo múltiple: varios sonidos a la vez. */
+  multi: boolean;
+  onMultiChange: (value: boolean) => void;
   resultCount: number;
   total: number;
   /** Acciones extra al final (ej. elegir carpeta local). */
   actions?: ReactNode;
 }
 
-/** Buscador + filtro de favoritos + contador. */
+/** Buscador + filtro de favoritos + modo múltiple + contador. */
 export function SoundToolbar({
   query,
   onQueryChange,
   favoritesOnly,
   onFavoritesOnlyChange,
   favoriteCount,
+  multi,
+  onMultiChange,
   resultCount,
   total,
   actions,
@@ -41,6 +46,9 @@ export function SoundToolbar({
       >
         Favoritos
         <span className="tabular-nums opacity-60">{favoriteCount}</span>
+      </ToggleChip>
+      <ToggleChip pressed={multi} onPressedChange={onMultiChange} icon={<LayersIcon className="size-4" />}>
+        Múltiple
       </ToggleChip>
       <span className="text-sm tabular-nums text-white/50">
         {resultCount} de {total}
